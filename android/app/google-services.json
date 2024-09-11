@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "222637984390",
+    "project_id": "lueats-cde05",
+    "storage_bucket": "lueats-cde05.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222637984390:android:72bbec3611a46ae49fdf07",
+        "android_client_info": {
+          "package_name": "com.example.lueats1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUPZMOwewwxKJf1wbm67RkFD4oToSD7H8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
