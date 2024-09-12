@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'Pages/Forgetpass.dart';
-import 'Pages/SplashScreen.dart';
-import 'Pages/signup.dart';
-import 'Pages/login.dart';
+import 'Pages/Welcome/SplashScreen.dart';
+import 'Pages/Authentication/Signup.dart';
+import 'Pages/Authentication/Login.dart';
 import 'Pages/CartPage.dart';
 import 'Pages/HomePage.dart';
 import 'Pages/MoneyPage.dart';

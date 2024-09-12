@@ -66,6 +66,13 @@ class _SignupState extends State<Signup> {
                 key: _formKey,  // Wrap the form with a GlobalKey to manage form validation state
                 child: Column(
                   children: [
+                    SizedBox(height: 10),
+                    Container(
+                      child: Center(
+                          child: Image(
+                              image: AssetImage('assets/images/Illustration.jpg'))),
+                      height: 250,
+                    ),
                     SizedBox(height: 20),
                     Text(
                       "Sign UP",
@@ -156,7 +163,7 @@ class _SignupState extends State<Signup> {
                     SizedBox(height: 50),
                     SizedBox(
                       height: 45,
-                      width: 300,
+                      width: 200,
                       child: ElevatedButton(
                         onPressed: () {
                           // Validate the form before signing up
@@ -173,14 +180,14 @@ class _SignupState extends State<Signup> {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      "Already signed up? Click to login",
+                      "Already signed up?",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 15, color: Colors.black),
                     ),
                     SizedBox(height: 5),
                     SizedBox(
                       height: 45,
-                      width: 300,
+                      width: 200,
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.pushNamed(context, "login1");  // Navigate to login page

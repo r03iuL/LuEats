@@ -70,11 +70,12 @@ class _LoginState extends State<Login> {
                 key: _formKey, // Attach form key to validate inputs
                 child: Column(
                   children: [
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     Container(
                       child: Center(
                           child: Image(
-                              image: AssetImage("assets/images/1723006.jpg"))),
+                              image: AssetImage('assets/images/Illustration.jpg'))),
+                      height: 250,
                     ),
                     SizedBox(height: 20),
                     Container(
@@ -87,7 +88,7 @@ class _LoginState extends State<Login> {
                             fontWeight: FontWeight.w900),
                       ),
                     ),
-                    SizedBox(height: 40),
+                    SizedBox(height: 20),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 22),
                       child: Align(
@@ -181,11 +182,11 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 90),
+                    SizedBox(height: 20),
                     Container(
                       child: SizedBox(
                         height: 45,
-                        width: 120,
+                        width: 200,
                         child: ElevatedButton(
                           onPressed: _loginUser, // Call the login method
                           child: Text(
@@ -198,7 +199,27 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
+                    Text(
+                      "Don't have an account?",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15, color: Colors.black),
+                    ),
+                    SizedBox(height: 5),
+                    SizedBox(
+                      height: 45,
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, "signup1");  // Navigate to login page
+                        },
+                        child: Text("Sign Up", style: TextStyle(fontSize: 19)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

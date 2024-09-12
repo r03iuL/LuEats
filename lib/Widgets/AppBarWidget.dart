@@ -7,9 +7,8 @@ class AppBarWidget extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-
+          // Menu Icon
           InkWell(
             onTap: () {
               Scaffold.of(context).openDrawer();
@@ -28,18 +27,16 @@ class AppBarWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(CupertinoIcons.bars), // Changed icon to make it different
+              child: Icon(CupertinoIcons.bars),
             ),
           ),
 
+          SizedBox(width: 10), // Spacing between the icon and search bar
 
-
-          InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, "moneyPage");
-            },
+          // Search Bar
+          Expanded(
             child: Container(
-              padding: EdgeInsets.all(8),
+              height: 50,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
@@ -52,12 +49,28 @@ class AppBarWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Icon(Icons.attach_money),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Icon(CupertinoIcons.search, color: Colors.deepOrange),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Search Here .. ",
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.filter_list, color: Colors.grey),
+                  ],
+                ),
+              ),
             ),
           ),
-
-
-
         ],
       ),
     );
