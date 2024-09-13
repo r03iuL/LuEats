@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lueats1/Widgets/AppBarWidget.dart';
 import 'package:lueats1/Widgets/DrawerWidget.dart';
-import '../Widgets/CartBottomNavBar.dart';
+import '../../Widgets/CartBottomNavBar.dart';
 
 class CartPage extends StatelessWidget{
 

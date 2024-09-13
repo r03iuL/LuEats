@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Signup extends StatefulWidget {
@@ -9,8 +10,8 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  final _auth = FirebaseAuth.instance;  // Firebase Authentication instance
-  final _formKey = GlobalKey<FormState>();  // Key to identify the form for validation
+  final _auth = FirebaseAuth.instance;
+  final _formKey = GlobalKey<FormState>();
 
   // Controllers to hold the input values from TextFormFields
   final TextEditingController _nameController = TextEditingController();
@@ -24,31 +25,142 @@ class _SignupState extends State<Signup> {
   final TextEditingController _floorController = TextEditingController();
   final TextEditingController _roomController = TextEditingController();
 
+  // Focus nodes to listen for focus change events
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
+  final FocusNode _mobileFocusNode = FocusNode();
+  final FocusNode _departmentFocusNode = FocusNode();
+  final FocusNode _designationFocusNode = FocusNode();
+  final FocusNode _buildingFocusNode = FocusNode();
+  final FocusNode _floorFocusNode = FocusNode();
+  final FocusNode _roomFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Attach listeners to the focus nodes to validate on focus change
+    _nameFocusNode.addListener(() {
+      if (!_nameFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+
+    _emailFocusNode.addListener(() {
+      if (!_emailFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+
+    _passwordFocusNode.addListener(() {
+      if (!_passwordFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+
+    _confirmPasswordFocusNode.addListener(() {
+      if (!_confirmPasswordFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+
+    _mobileFocusNode.addListener(() {
+      if (!_mobileFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+
+    _departmentFocusNode.addListener(() {
+      if (!_departmentFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+
+    _designationFocusNode.addListener(() {
+      if (!_designationFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+
+    _buildingFocusNode.addListener(() {
+      if (!_buildingFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+
+    _floorFocusNode.addListener(() {
+      if (!_floorFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+
+    _roomFocusNode.addListener(() {
+      if (!_roomFocusNode.hasFocus) {
+        _formKey.currentState?.validate();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // Dispose focus nodes to prevent memory leaks
+    _nameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+    _mobileFocusNode.dispose();
+    _departmentFocusNode.dispose();
+    _designationFocusNode.dispose();
+    _buildingFocusNode.dispose();
+    _floorFocusNode.dispose();
+    _roomFocusNode.dispose();
+    super.dispose();
+  }
+
   // Function to handle user sign-up with Firebase
   Future<void> _signUp() async {
     if (_formKey.currentState?.validate() ?? false) {
       try {
-        // Create a new user with email and password using Firebase
         UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Signup Successful!"),  // Notify user of success
-          backgroundColor: Colors.green,
-        ));
+        User? user = userCredential.user;
 
-        // Navigate to another page after successful sign-up
-        Navigator.pushNamed(context, "login1");
+        if (user != null) {
+          await user.sendEmailVerification();
+
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+            'name': _nameController.text.trim(),
+            'email': _emailController.text.trim(),
+            'phone': _mobileController.text.trim(),
+            'department': _departmentController.text.trim(),
+            'designation': _designationController.text.trim(),
+            'building': _buildingController.text.trim(),
+            'floor': _floorController.text.trim(),
+            'room': _roomController.text.trim(),
+            'createdAt': Timestamp.now(),
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Signup Successful! Please verify your email."),
+            backgroundColor: Colors.green,
+          ));
+
+          await Future.delayed(Duration(seconds: 2));
+          Navigator.pushNamed(context, "login1");
+        }
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.message ?? "An error occurred"),  // Display error message
+          content: Text(e.message ?? "An error occurred"),
           backgroundColor: Colors.red,
         ));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Something went wrong"),  // General error message
+          content: Text("Something went wrong"),
           backgroundColor: Colors.red,
         ));
       }
@@ -69,11 +181,14 @@ class _SignupState extends State<Signup> {
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
-    } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$').hasMatch(value)) {
-      return 'Password must contain one uppercase, one lowercase, and one number';
+    } else if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)').hasMatch(value)) {
+      return 'Minimum one uppercase,one lowercase,and one number';
     }
     return null;
   }
+
 
   // Validator to check if password and confirm password match
   String? _validateConfirmPassword(String? value) {
@@ -91,6 +206,16 @@ class _SignupState extends State<Signup> {
     return null;
   }
 
+  // Custom email validator that checks for proper format and @lus.ac.bd
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    } else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@lus.ac.bd$').hasMatch(value)) {
+      return 'Email must be in the format abc@lus.ac.bd';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +229,7 @@ class _SignupState extends State<Signup> {
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Form(
-                key: _formKey,  // Wrap the form with a GlobalKey to manage form validation state
+                key: _formKey,
                 child: Column(
                   children: [
                     SizedBox(height: 10),
@@ -123,51 +248,249 @@ class _SignupState extends State<Signup> {
                     SizedBox(height: 30),
 
                     // Full Name
-                    _buildFormField("Full Name", "Enter Your Name", _nameController, _validateRequired),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Full Name", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _nameController,
+                            focusNode: _nameFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "Enter Your Name",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            validator: _validateRequired,
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
 
                     // Email address
-                    _buildFormField("Email address", "abc123@gmail.com", _emailController, _validateRequired),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Email address", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _emailController,
+                            focusNode: _emailFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "example@lus.ac.bd",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            validator: _validateEmail,
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
 
                     // Password
-                    _buildFormField("Password", ".............", _passwordController, _validatePassword, obscureText: true),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Password", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _passwordController,
+                            focusNode: _passwordFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "******",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            //obscureText: true,
+                            validator: _validatePassword,
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
 
                     // Confirm Password
-                    _buildFormField("Confirm Password", ".............", _confirmPasswordController, _validateConfirmPassword, obscureText: true),
-
-                    SizedBox(height: 30),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 22),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text("Additional Information", style: TextStyle(fontSize: 18, color: Colors.orangeAccent, fontWeight: FontWeight.bold)),
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Confirm Password", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _confirmPasswordController,
+                            focusNode: _confirmPasswordFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "******",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            //obscureText: true,
+                            validator: _validateConfirmPassword,
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 30),
-
-                    // Department
-                    _buildFormField("Department", "CSE", _departmentController, _validateRequired),
-
-                    // Designation
-                    _buildFormField("Designation", "Lecturer", _designationController, _validateRequired),
+                    Text(
+                      "Additional Information",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontSize: 20, color: Colors.orangeAccent, fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(height: 30),
 
                     // Phone Number
-                    _buildFormField("Phone Number", "Enter Your Number", _mobileController, _validatePhone),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Phone Number", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _mobileController,
+                            focusNode: _mobileFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "0188888888",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            validator: _validatePhone,
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
+
+                    // Department
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Department", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _departmentController,
+                            focusNode: _departmentFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "eg. CSE",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            validator: _validateRequired,
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
+
+                    // Designation
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Designation", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _designationController,
+                            focusNode: _designationFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "eg. Lecturer",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            validator: _validateRequired,
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
 
                     // Building
-                    _buildFormField("Building", "RKB/RAB", _buildingController, _validateRequired),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Building", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _buildingController,
+                            focusNode: _buildingFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "RAB/RKB",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            validator: _validateRequired,
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
 
                     // Floor
-                    _buildFormField("Floor", "1st/2nd/3rd/4th", _floorController, _validateRequired),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Floor", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _floorController,
+                            focusNode: _floorFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "1st/2nd/3rd/4th",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            validator: _validateRequired,
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
 
                     // Room Number
-                    _buildFormField("Room Number", "Room Number or Name", _roomController, _validateRequired),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Room Number", style: TextStyle(fontSize: 18, color: Colors.black)),
+                          TextFormField(
+                            controller: _roomController,
+                            focusNode: _roomFocusNode,
+                            decoration: InputDecoration(
+                              hintText: "eg. CSE Faculty Room",
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                            ),
+                            validator: _validateRequired,
+                          ),
+                        ],
+                      ),
+                    ),
 
-                    SizedBox(height: 50),
+                    // Signup button
+                    SizedBox(height: 30),
                     SizedBox(
                       height: 45,
                       width: 200,
                       child: ElevatedButton(
-                        onPressed: _signUp,  // Call the signup function if form is valid
+                        onPressed: _signUp,
                         child: Text("Sign Up", style: TextStyle(fontSize: 19)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
@@ -187,7 +510,7 @@ class _SignupState extends State<Signup> {
                       width: 200,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, "login1");  // Navigate to login page
+                          Navigator.pushNamed(context, "login1");
                         },
                         child: Text("Login", style: TextStyle(fontSize: 19)),
                         style: ElevatedButton.styleFrom(
@@ -202,31 +525,6 @@ class _SignupState extends State<Signup> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  // Helper method to build form fields
-  Widget _buildFormField(String label, String hintText, TextEditingController controller, String? Function(String?) validator, {bool obscureText = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 22),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: TextStyle(fontSize: 18, color: Colors.black)),
-          TextFormField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: hintText,
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-              ),
-            ),
-            obscureText: obscureText,
-            validator: validator,
-          ),
-          SizedBox(height: 30),
-        ],
       ),
     );
   }

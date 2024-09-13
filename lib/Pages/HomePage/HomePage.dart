@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
-import '../Widgets/AppBarWidget.dart';
-import '../Widgets/CategoriesWidget.dart';
-import '../Widgets/DrawerWidget.dart';
-import '../Widgets/NewestItemsWidget.dart';
-import '../Widgets/popularItemsWidget.dart';
+import '../../Widgets/AppBarWidget.dart';
+import '../../Widgets/CategoriesWidget.dart';
+import '../../Widgets/DrawerWidget.dart';
+import '../../Widgets/NewestItemsWidget.dart';
+import '../../Widgets/popularItemsWidget.dart';
 
 
 class HomePage extends StatelessWidget {
