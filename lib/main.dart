@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Pages/Forgetpass.dart';
+import 'Pages/Authentication/Forgetpass.dart';
 import 'Pages/Welcome/SplashScreen.dart';
 import 'Pages/Authentication/Signup.dart';
 import 'Pages/Authentication/Login.dart';
@@ -19,7 +19,7 @@ import 'Pages/Orderburger.dart';
 import 'Pages/Ordercupnoodles.dart';
 import 'Pages/Ordermojo.dart';
 import 'Pages/Orderkhicuri.dart';
-import 'Pages/Storeinfopage.dart';
+import 'Pages/Authentication/Storeinfopage.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
