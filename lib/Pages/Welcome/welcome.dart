@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, implementation_imports, sort_child_properties_last, avoid_unnecessary_containers, camel_case_types
 import 'package:flutter/material.dart';
-import '../Authentication/Signup.dart';
-import '../Authentication/Login.dart';
+import '../Authentication/sign_up.dart';
+import '../Authentication/log_in.dart';
 
 // ignore: unnecessary_import
 import 'package:flutter/src/widgets/framework.dart';

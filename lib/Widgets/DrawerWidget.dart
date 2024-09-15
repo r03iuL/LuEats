@@ -14,9 +14,9 @@ class DrawerWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.deepOrange,
               ),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage("assets/images/l1.png"),
-              ),
+              // currentAccountPicture: CircleAvatar(
+              //   backgroundImage: AssetImage("assets/images/l1.png"),
+              // ),
               accountName: Text(
                 "LuEATS",
                 style: TextStyle(

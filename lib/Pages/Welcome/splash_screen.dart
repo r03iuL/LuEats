@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../Authentication/Signup.dart';
-import '../Authentication/Login.dart';
-import 'Welcome.dart';
+import '../HomePage/home_page.dart';
+import '../Welcome/welcome.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,14 +13,28 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushAndRemoveUntil(
+    super.initState();
+    _checkUserStatus();
+  }
+
+  Future<void> _checkUserStatus() async {
+    await Future.delayed(Duration(seconds: 3)); // Simulate loading time
+
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // User is logged in
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      // User is not logged in
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Welcome()),
-            (route) => false,
       );
-    });
-    super.initState();
+    }
   }
 
   @override

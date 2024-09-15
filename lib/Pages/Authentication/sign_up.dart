@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class Signup extends StatefulWidget {
@@ -36,6 +39,10 @@ class _SignupState extends State<Signup> {
   final FocusNode _buildingFocusNode = FocusNode();
   final FocusNode _floorFocusNode = FocusNode();
   final FocusNode _roomFocusNode = FocusNode();
+
+  // Variable to hold the image file
+  File? _imageFile;
+
 
   @override
   void initState() {
@@ -119,6 +126,32 @@ class _SignupState extends State<Signup> {
     super.dispose();
   }
 
+  //Image Picker Function
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    try {
+      final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedImage != null) {
+        setState(() {
+          _imageFile = File(pickedImage.path);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('No image selected'),
+          backgroundColor: Colors.grey,
+        ));
+      }
+    } catch (e) {
+      // Handle any errors that might occur during image picking
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error picking image: $e'),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+
   // Function to handle user sign-up with Firebase
   Future<void> _signUp() async {
     if (_formKey.currentState?.validate() ?? false) {
@@ -133,6 +166,13 @@ class _SignupState extends State<Signup> {
         if (user != null) {
           await user.sendEmailVerification();
 
+          // Upload image to Firebase Storage
+          String? imageUrl;
+          if (_imageFile != null) {
+            imageUrl = await _uploadImage(user.uid);
+          }
+
+          // Store user data along with image URL in Firestore
           await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
             'name': _nameController.text.trim(),
             'email': _emailController.text.trim(),
@@ -142,6 +182,7 @@ class _SignupState extends State<Signup> {
             'building': _buildingController.text.trim(),
             'floor': _floorController.text.trim(),
             'room': _roomController.text.trim(),
+            'imageUrl': imageUrl,
             'createdAt': Timestamp.now(),
           });
 
@@ -151,6 +192,7 @@ class _SignupState extends State<Signup> {
           ));
 
           await Future.delayed(Duration(seconds: 2));
+          await _auth.signOut();
           Navigator.pushNamed(context, "login1");
         }
       } on FirebaseAuthException catch (e) {
@@ -164,6 +206,22 @@ class _SignupState extends State<Signup> {
           backgroundColor: Colors.red,
         ));
       }
+    }
+  }
+
+  // Function to upload image to Firebase Storage
+  Future<String?> _uploadImage(String uid) async {
+    try {
+      final storageRef = FirebaseStorage.instance.ref().child('user_images/$uid.jpg');
+      final uploadTask = await storageRef.putFile(_imageFile!);
+      final downloadUrl = await uploadTask.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Failed to upload image"),
+        backgroundColor: Colors.red,
+      ));
+      return null;
     }
   }
 
@@ -259,6 +317,9 @@ class _SignupState extends State<Signup> {
                             focusNode: _nameFocusNode,
                             decoration: InputDecoration(
                               hintText: "Enter Your Name",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
@@ -282,6 +343,9 @@ class _SignupState extends State<Signup> {
                             focusNode: _emailFocusNode,
                             decoration: InputDecoration(
                               hintText: "example@lus.ac.bd",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
@@ -305,6 +369,9 @@ class _SignupState extends State<Signup> {
                             focusNode: _passwordFocusNode,
                             decoration: InputDecoration(
                               hintText: "******",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
@@ -329,6 +396,9 @@ class _SignupState extends State<Signup> {
                             focusNode: _confirmPasswordFocusNode,
                             decoration: InputDecoration(
                               hintText: "******",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
@@ -347,6 +417,34 @@ class _SignupState extends State<Signup> {
                     ),
                     SizedBox(height: 30),
 
+                    // Image picker
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 22),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("Profile Picture",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(fontSize: 18, color: Colors.black)),
+                          SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: _pickImage,
+                            child: CircleAvatar(
+                              radius: 100,
+                              backgroundColor: Colors.grey[200],
+                              backgroundImage:
+                              _imageFile != null ? FileImage(_imageFile!) : null,
+                              child: _imageFile == null
+                                  ? Icon(Icons.camera_alt,
+                                  size: 40, color: Colors.grey[600])
+                                  : null,
+                            ),
+                          ),
+                          SizedBox(height: 30),
+                        ],
+                      ),
+                    ),
+
                     // Phone Number
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 22),
@@ -359,6 +457,9 @@ class _SignupState extends State<Signup> {
                             focusNode: _mobileFocusNode,
                             decoration: InputDecoration(
                               hintText: "0188888888",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
@@ -382,6 +483,9 @@ class _SignupState extends State<Signup> {
                             focusNode: _departmentFocusNode,
                             decoration: InputDecoration(
                               hintText: "eg. CSE",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
@@ -405,6 +509,9 @@ class _SignupState extends State<Signup> {
                             focusNode: _designationFocusNode,
                             decoration: InputDecoration(
                               hintText: "eg. Lecturer",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
@@ -428,6 +535,9 @@ class _SignupState extends State<Signup> {
                             focusNode: _buildingFocusNode,
                             decoration: InputDecoration(
                               hintText: "RAB/RKB",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
@@ -450,7 +560,10 @@ class _SignupState extends State<Signup> {
                             controller: _floorController,
                             focusNode: _floorFocusNode,
                             decoration: InputDecoration(
-                              hintText: "1st/2nd/3rd/4th",
+                              hintText: "1st/2nd/3rd",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
@@ -474,6 +587,9 @@ class _SignupState extends State<Signup> {
                             focusNode: _roomFocusNode,
                             decoration: InputDecoration(
                               hintText: "eg. CSE Faculty Room",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),

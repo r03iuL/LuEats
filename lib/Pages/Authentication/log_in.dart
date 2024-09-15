@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Authentication
 import 'package:flutter/src/widgets/framework.dart';
@@ -27,26 +25,43 @@ class _LoginState extends State<Login> {
     if (_formKey.currentState!.validate()) {
       try {
         // Firebase login using email and password
-        await _auth.signInWithEmailAndPassword(
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
             email: _emailController.text.trim(),
             password: _passwordController.text.trim());
-        // Navigate to homepage on successful login
-        Navigator.pushNamed(context, "homepage");
-      } on FirebaseAuthException catch (e) {
-        // Handle Firebase login errors
-        String errorMessage = '';
-        if (e.code == 'user-not-found') {
-          errorMessage = 'No user found for that email.';
-        } else if (e.code == 'wrong-password') {
-          errorMessage = 'Wrong password provided for that user.';
+
+        // Check if the email is verified
+        User? user = userCredential.user;
+        if (user != null) {
+          await user.reload(); // Reload user to get updated information
+          user = _auth.currentUser;
+
+          if (user != null && user.emailVerified) {
+            // Email is verified, navigate to homepage
+            Navigator.pushNamed(context, "homepage");
+          } else {
+            // Email is not verified
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Please verify your email address.'), backgroundColor: Colors.red),
+            );
+            // Log out the user
+            await _auth.signOut();
+          }
         }
-        // Show error message
+      } on FirebaseAuthException catch (e) {
+        // Display raw error message from Firebase
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
+          SnackBar(content: Text(e.message ?? 'An error occurred.'), backgroundColor: Colors.red),
+        );
+      } catch (e) {
+        // Display raw error message for unexpected errors
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
         );
       }
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +124,9 @@ class _LoginState extends State<Login> {
                           controller: _emailController, // Capture email input
                           decoration: InputDecoration(
                               hintText: "example@lus.ac.bd",
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black))),
                           // Validate email input
@@ -140,9 +158,12 @@ class _LoginState extends State<Login> {
                       child: Container(
                         child: TextFormField(
                           controller: _passwordController, // Capture password input
-                          //obscureText: true, // Hide password characters
+                          obscureText: true, // Hide password characters
                           decoration: InputDecoration(
                               hintText: '*********',
+                              hintStyle: TextStyle(
+                                color: Colors.grey.withOpacity(0.5), // Adjust opacity here
+                              ),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black))),
                           // Validate password input
@@ -205,7 +226,7 @@ class _LoginState extends State<Login> {
                       width: 200,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, "signup1");  // Navigate to login page
+                          Navigator.pushNamed(context, "signup1");  // Navigate to signup page
                         },
                         child: Text("Sign Up", style: TextStyle(fontSize: 19)),
                         style: ElevatedButton.styleFrom(

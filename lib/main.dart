@@ -1,11 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Pages/Authentication/Forgetpass.dart';
-import 'Pages/Welcome/SplashScreen.dart';
-import 'Pages/Authentication/Signup.dart';
-import 'Pages/Authentication/Login.dart';
-import 'Pages/Cart/CartPage.dart';
-import 'Pages/HomePage/HomePage.dart';
+import 'package:lueats1/Pages/Welcome/welcome.dart';
+import 'Pages/Authentication/forgot_pass.dart';
+import 'Pages/Welcome/splash_screen.dart';
+import 'Pages/Authentication/sign_up.dart';
+import 'Pages/Authentication/log_in.dart';
+import 'Pages/Cart/cart_page.dart';
+import 'Pages/HomePage/home_page.dart';
 import 'Pages/MoneyPage.dart';
 import 'Pages/Itemsingara.dart';
 import 'Pages/Itemsomuca.dart';
@@ -19,7 +20,6 @@ import 'Pages/Orderburger.dart';
 import 'Pages/Ordercupnoodles.dart';
 import 'Pages/Ordermojo.dart';
 import 'Pages/Orderkhicuri.dart';
-import 'Pages/Authentication/Storeinfopage.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +47,7 @@ class MyApp extends StatelessWidget {
         "signup1": (context) => Signup(),
         "login1": (context) => Login(),
         "homepage": (context) => HomePage(),
+        "welcome": (context) => Welcome(),
         "moneyPage":(context) => MoneyPage(),
         "cartPage": (context) => CartPage(),
         "itemsingara": (context) => Itemsingara(),
@@ -61,7 +62,6 @@ class MyApp extends StatelessWidget {
         "ordercupnoodles": (context) => Ordercupnoodles(),
         "ordermojo": (context) => Ordermojo(),
         "orderkhicuri": (context) => Orderkhicuri(),
-        "storeinfo": (context) => StoreinfoPage(),
         "forgetpass": (context) => Forgetpass(),
 
 
