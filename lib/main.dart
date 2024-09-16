@@ -13,13 +13,16 @@ import 'Pages/Itemsomuca.dart';
 import 'Pages/Orderbreakfast.dart';
 import 'Pages/Orderdrinks.dart';
 import 'Pages/Ordertea.dart';
-import 'Pages/Orderlunch.dart';
+import 'Pages/Lunch/order_lunch.dart';
 import 'Pages/Orderpizza.dart';
 import 'Pages/Orderbiriyani.dart';
 import 'Pages/Orderburger.dart';
 import 'Pages/Ordercupnoodles.dart';
 import 'Pages/Ordermojo.dart';
 import 'Pages/Orderkhicuri.dart';
+import 'Pages/Admin/add_food.dart';
+import 'Pages/Admin/add_category.dart';
+import 'Pages/Admin/add_lunch.dart';
 
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,6 +66,10 @@ class MyApp extends StatelessWidget {
         "ordermojo": (context) => Ordermojo(),
         "orderkhicuri": (context) => Orderkhicuri(),
         "forgetpass": (context) => Forgetpass(),
+        "addfood": (context) => AddFood(),
+        "addfood": (context) => AddFood(),
+        "addlunch": (context) => AddLunch(),
+        "addcategory": (context) => AddCategory(),
 
 
       },

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:clippy_flutter/arc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:lueats1/Widgets/AppBarWidget.dart';
-import 'package:lueats1/Widgets/DrawerWidget.dart';
+import 'package:lueats1/Widgets/app_bar_widget.dart';
+import 'package:lueats1/Widgets/drawer_widget.dart';
 import '../Widgets/ItemBottomNavBar.dart';
 
 

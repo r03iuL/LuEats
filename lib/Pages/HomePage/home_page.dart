@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../Widgets/AppBarWidget.dart';
-import '../../Widgets/CategoriesWidget.dart';
-import '../../Widgets/DrawerWidget.dart';
 import '../../Widgets/NewestItemsWidget.dart';
-import '../../Widgets/popularItemsWidget.dart';
+import '../../Widgets/app_bar_widget.dart';
+import '../../Widgets/categories_widget.dart';
+import '../../Widgets/drawer_widget.dart';
+import '../../Widgets/food_items_grid_widget.dart';
+import '../../Widgets/popular_iItems_widget.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -60,7 +62,8 @@ class HomePage extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white, // Background color
                             foregroundColor: Colors.red, // Text color
-                            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16.0),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
@@ -75,7 +78,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(right:0),
+                  margin: EdgeInsets.only(right: 0),
                   // Padding inside the container
                   child: Image.asset(
                     'assets/images/launch.png', // Replace with your image path
@@ -100,7 +103,7 @@ class HomePage extends StatelessWidget {
           ),
 
           //Category Widget
-          CatagoriesWidget(),
+          CategoriesWidget(),
 
           // popular Items
           Padding(
@@ -114,22 +117,28 @@ class HomePage extends StatelessWidget {
             ),
           ),
           //popular items widget
-          popularItemsWidget(),
+          PopularItemsWidget(),
 
           //newest Items
           Padding(
             padding: EdgeInsets.only(top: 40, left: 10),
             child: Text(
-              "New Items",
+              "All Items",
               style: TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 20,
               ),
             ),
           ),
-
-          //new items widget
-          NewestItemsWidget(),
+        // SizedBox(height: 10,),
+          //Food items widget
+          FoodItemsGrid(
+            foodQuery: FirebaseFirestore.instance.collection('Food_items'),
+            onItemTap: (foodData) {
+              // Navigate to food detail page when an item is tapped
+              Navigator.pushNamed(context, "orderpage", arguments: foodData);
+            },
+          ),
         ],
       ),
       drawer: DrawerWidget(),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:clippy_flutter/arc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../Widgets/AppBarWidget.dart';
-import '../Widgets/DrawerWidget.dart';
+import '../Widgets/app_bar_widget.dart';
+import '../Widgets/drawer_widget.dart';
 import '../Widgets/ItemBottomNavBar.dart';
 
 class Orderkhicuri extends StatelessWidget {

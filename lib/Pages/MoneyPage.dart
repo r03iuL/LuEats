@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:clippy_flutter/arc.dart';
 import 'package:flutter/cupertino.dart';
-import '../Widgets/AppBarWidget.dart';
-import '../Widgets/DrawerWidget.dart';
+import '../Widgets/app_bar_widget.dart';
+import '../Widgets/drawer_widget.dart';
 
 class MoneyPage extends StatelessWidget {
   @override
