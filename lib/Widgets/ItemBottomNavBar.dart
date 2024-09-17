@@ -8,25 +8,9 @@ class ItemBottomNavBar extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         height: 70,
-        color: Colors.white,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Row(
-              children: [
-                Text(
-                  "Click here",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-
-              ],
-            ),
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.pushNamed(context, "cartPage");

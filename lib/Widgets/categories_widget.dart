@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../Pages/food_items_by_category.dart';
 
 class CategoriesWidget extends StatelessWidget {
   final CollectionReference _categoryCollection =
@@ -18,7 +19,6 @@ class CategoriesWidget extends StatelessWidget {
           return Center(child: Text('No categories found'));
         }
 
-        // Parsing the fetched categories data
         final categories = snapshot.data!.docs.map((doc) {
           return {
             'name': doc['name'],
@@ -56,11 +56,17 @@ class CategoriesWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 10),
-
                           InkWell(
                             onTap: () {
-                              // Handle navigation to the respective category
-                              Navigator.pushNamed(context, "order${category['name'].toLowerCase()}");
+                              // Navigate to the food items page and pass the category name
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FoodItemsByCategoryPage(
+                                    categoryName: category['name'],
+                                  ),
+                                ),
+                              );
                             },
                             child: Container(
                               child: Image.network(

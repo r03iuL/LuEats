@@ -1,13 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import '../Pages/food_details.dart';
+import '../Pages/Cart/cart_provider.dart';
 
 class PopularItemsWidget extends StatelessWidget {
+  double convertToDouble(dynamic value) {
+    if (value is String) {
+      return double.tryParse(value) ?? 0.0;
+    } else if (value is num) {
+      return value.toDouble();
+    } else {
+      return 0.0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('Food_items') // Assuming your collection is named 'food'
+          .collection('Food_items')
           .where('popularity', isEqualTo: 'Popular')
           .snapshots(),
       builder: (context, snapshot) {
@@ -28,6 +41,7 @@ class PopularItemsWidget extends StatelessWidget {
             child: Row(
               children: popularItems.map((doc) {
                 final foodData = doc.data() as Map<String, dynamic>;
+
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 7),
                   child: Container(
@@ -46,19 +60,28 @@ class PopularItemsWidget extends StatelessWidget {
                       ],
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 20),
                           InkWell(
                             onTap: () {
-                              Navigator.pushNamed(context, "orderpage", arguments: foodData);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FoodDetailsPage(
+                                    imageUrl: foodData['image'] ?? 'assets/images/default_image.png',
+                                    name: foodData['name'] ?? 'No Name Available',
+                                    description: foodData['description'] ?? 'No Description Available',
+                                    price: convertToDouble(foodData['price']),
+                                  ),
+                                ),
+                              );
                             },
                             child: Container(
-
                               child: Image.network(
-                                foodData['image'], // Display the image from Firestore
+                                foodData['image'] ?? 'assets/images/default_image.png',
                                 height: 130,
                                 fit: BoxFit.cover,
                               ),
@@ -66,7 +89,7 @@ class PopularItemsWidget extends StatelessWidget {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            foodData['name'], // Display the food name
+                            foodData['name'] ?? 'No Name Available',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -77,7 +100,7 @@ class PopularItemsWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "৳${foodData['price']}", // Display the price
+                                "৳${convertToDouble(foodData['price'])}",
                                 style: TextStyle(
                                   fontSize: 17,
                                   color: Colors.red,
@@ -86,7 +109,25 @@ class PopularItemsWidget extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(context, "orderpage", arguments: foodData);
+                                  final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+                                  final cartItem = CartItem(
+                                    name: foodData['name'] ?? 'No Name Available',
+                                    imageUrl: foodData['image'] ?? 'assets/images/default_image.png',
+                                    description: foodData['description'] ?? 'No Description Available',
+                                    price: convertToDouble(foodData['price']),
+                                    quantity: 1,
+                                  );
+
+                                  cartProvider.addItem(cartItem);
+
+                                  // Show Snackbar notification
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('${foodData['name']} added to cart!'),
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
                                 },
                                 child: Icon(
                                   CupertinoIcons.cart,

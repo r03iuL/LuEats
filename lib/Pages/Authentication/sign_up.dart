@@ -413,7 +413,7 @@ class _SignupState extends State<Signup> {
                     Text(
                       "Additional Information",
                       textAlign: TextAlign.left,
-                      style: TextStyle(fontSize: 20, color: Colors.orangeAccent, fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 25, color: Colors.orangeAccent, fontWeight: FontWeight.w500),
                     ),
                     SizedBox(height: 30),
 

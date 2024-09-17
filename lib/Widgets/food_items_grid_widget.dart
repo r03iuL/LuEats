@@ -1,12 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart'; // Import Provider for cart functionality
+import '../Pages/food_details.dart'; // Import the FoodDetailsPage
+import '../Pages/Cart/cart_provider.dart'; // Import CartProvider for managing cart items
 
 class FoodItemsGrid extends StatelessWidget {
-  final Query foodQuery; // This will allow us to pass different queries (e.g., for all foods or for specific categories)
-  final void Function(Map<String, dynamic> foodData) onItemTap; // A callback function to handle item tap navigation
+  final Query foodQuery;
+  final void Function(Map<String, dynamic> foodData)? onItemTap;
 
-  FoodItemsGrid({required this.foodQuery, required this.onItemTap});
+  FoodItemsGrid({required this.foodQuery, this.onItemTap});
+
+  double convertToDouble(dynamic value) {
+    if (value is String) {
+      return double.tryParse(value) ?? 0.0;
+    } else if (value is num) {
+      return value.toDouble();
+    } else {
+      return 0.0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +38,35 @@ class FoodItemsGrid extends StatelessWidget {
 
         return GridView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(), // To allow scrolling within a scrollable parent
+          physics: NeverScrollableScrollPhysics(),
           itemCount: foodItems.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Show items in two columns
-            crossAxisSpacing: 0, // Horizontal margin between items
-            mainAxisSpacing: 10, // Vertical margin between items
-            childAspectRatio: 10 / 13, // Set the aspect ratio to match the desired size
+            crossAxisCount: 2,
+            crossAxisSpacing: 0,
+            mainAxisSpacing: 10,
+            childAspectRatio: 10 / 13,
           ),
           itemBuilder: (context, index) {
             final foodData = foodItems[index].data() as Map<String, dynamic>;
 
+            final price = convertToDouble(foodData['price']);
+
             return GestureDetector(
-              onTap: () => onItemTap(foodData), // Call the provided callback function when an item is tapped
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FoodDetailsPage(
+                      imageUrl: foodData['image'],
+                      name: foodData['name'],
+                      description: foodData['description'],
+                      price: price,
+                    ),
+                  ),
+                );
+              },
               child: Container(
-                margin:EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -54,25 +81,35 @@ class FoodItemsGrid extends StatelessWidget {
                   ],
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(10), // Padding inside the container
+                  padding: EdgeInsets.all(10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 10), // Adjust vertical space above the image
+                      SizedBox(height: 10),
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            Navigator.pushNamed(context, "orderpage", arguments: foodData);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FoodDetailsPage(
+                                  imageUrl: foodData['image'],
+                                  name: foodData['name'],
+                                  description: foodData['description'],
+                                  price: price,
+                                ),
+                              ),
+                            );
                           },
                           child: Image.network(
-                            foodData['image'], // Display the image from Firestore
-                            fit: BoxFit.cover, // Ensure image covers the width of the container
+                            foodData['image'],
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
                       SizedBox(height: 8),
                       Text(
-                        foodData['name'], // Display the food name
+                        foodData['name'],
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
@@ -84,7 +121,7 @@ class FoodItemsGrid extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "৳${foodData['price']}", // Display the price
+                            "৳${price.toStringAsFixed(2)}",
                             style: TextStyle(
                               fontSize: 17,
                               color: Colors.red,
@@ -93,7 +130,25 @@ class FoodItemsGrid extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {
-                              Navigator.pushNamed(context, "orderpage", arguments: foodData);
+                              final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+                              final cartItem = CartItem(
+                                name: foodData['name'] ?? 'No Name Available',
+                                imageUrl: foodData['image'] ?? 'assets/images/default_image.png',
+                                description: foodData['description'] ?? 'No Description Available',
+                                price: price,
+                                quantity: 1,
+                              );
+
+                              cartProvider.addItem(cartItem);
+
+                              // Show Snackbar notification
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('${foodData['name']} added to cart!'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
                             },
                             child: Icon(
                               CupertinoIcons.cart,
@@ -101,7 +156,6 @@ class FoodItemsGrid extends StatelessWidget {
                               size: 26,
                             ),
                           ),
-
                         ],
                       ),
                       SizedBox(height: 10),

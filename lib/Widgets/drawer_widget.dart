@@ -124,55 +124,60 @@ class DrawerWidget extends StatelessWidget {
                 ListTile(
                   leading: Icon(CupertinoIcons.person, color: Colors.green),
                   title: Text(
-                    "Account",
+                    "Profile",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, "loginpage");
+                    Navigator.pushNamed(context, "profile");
                   },
                 ),
                 ListTile(
                   leading: Icon(CupertinoIcons.cart_fill_badge_plus, color: Colors.green),
                   title: Text(
-                    "Order",
+                    "Order History",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   onTap: () {
-                    Navigator.pushNamed(context, "cartPage");
+                    Navigator.pushNamed(context, "orderhistory");
                   },
                 ),
-                ListTile(
-                  leading: Icon(Icons.money, color: Colors.green),
-                  title: Text(
-                    "Money Section",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, "moneyPage");
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.settings, color: Colors.green),
-                  title: Text(
-                    "Settings",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, "signup1");
-                  },
-                ),
+
+                //Credit
+                // ListTile(
+                //   leading: Icon(Icons.money, color: Colors.green),
+                //   title: Text(
+                //     "Money Section",
+                //     style: TextStyle(
+                //       fontSize: 18,
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //   ),
+                //   onTap: () {
+                //     Navigator.pushNamed(context, "moneyPage");
+                //   },
+                // ),
+
+                //Settings
+                // ListTile(
+                //   leading: Icon(Icons.settings, color: Colors.green),
+                //   title: Text(
+                //     "Settings",
+                //     style: TextStyle(
+                //       fontSize: 18,
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //   ),
+                //   onTap: () {
+                //     Navigator.pushNamed(context, "signup1");
+                //   },
+                // ),
+
                 ListTile(
                   leading: Icon(Icons.settings, color: Colors.green),
                   title: Text(

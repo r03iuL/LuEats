@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../Widgets/NewestItemsWidget.dart';
 import '../../Widgets/app_bar_widget.dart';
 import '../../Widgets/categories_widget.dart';
 import '../../Widgets/drawer_widget.dart';
@@ -121,7 +119,7 @@ class HomePage extends StatelessWidget {
 
           //newest Items
           Padding(
-            padding: EdgeInsets.only(top: 40, left: 10),
+            padding: EdgeInsets.only(top: 20, left: 20),
             child: Text(
               "All Items",
               style: TextStyle(

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:clippy_flutter/arc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter/material.dart';
+
+import '../../Widgets/ItemBottomNavBar.dart';
 import '../../Widgets/app_bar_widget.dart';
 import '../../Widgets/drawer_widget.dart';
-import '../../Widgets/ItemBottomNavBar.dart';
 
 class Orderlunch extends StatelessWidget {
   @override
@@ -69,7 +69,7 @@ class Orderlunch extends StatelessWidget {
                               ),
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Icon(
                                     CupertinoIcons.minus,
@@ -96,7 +96,7 @@ class Orderlunch extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 10,bottom: 25),
+                        padding: EdgeInsets.only(top: 10, bottom: 25),
                         child: Text(
                           "Hare Rice, Chicken,Latent,Vegitable,Egg are available in a pakage.",
                           style: TextStyle(
@@ -106,40 +106,6 @@ class Orderlunch extends StatelessWidget {
                           textAlign: TextAlign.justify,
                         ),
                       ),
-
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 20),
-                    child:  Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Delivery Time:",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: Icon(
-                                  CupertinoIcons.clock_solid,
-                                  color: Colors.red,
-                                ),
-                              ),
-                              Text(
-                                "1.00pm-4.00pm",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                ),
                     ],
                   ),
                 ),
