@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:lueats1/Widgets/cart_bottom_navbar.dart';
-import 'package:lueats1/Widgets/app_bar_widget.dart';
 import 'package:lueats1/Widgets/drawer_widget.dart';
+import 'package:provider/provider.dart';
 import '../Cart/cart_provider.dart';
 
 class CartPage extends StatelessWidget {
@@ -13,17 +12,17 @@ class CartPage extends StatelessWidget {
     final cartProvider = Provider.of<CartProvider>(context);
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Your Cart',
-            style: TextStyle(
-                fontSize: 24, // Adjust the font size
-                fontWeight: FontWeight.bold, // Adjust the font weight
-                color: Colors.white),
-          ),
-          backgroundColor: Colors.deepOrange,
-          centerTitle: true,
+      appBar: AppBar(
+        title: Text(
+          'Your Cart',
+          style: TextStyle(
+              fontSize: 24, // Adjust the font size
+              fontWeight: FontWeight.bold, // Adjust the font weight
+              color: Colors.white),
         ),
+        backgroundColor: Colors.deepOrange,
+        centerTitle: true,
+      ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 8),
         children: [
@@ -39,114 +38,125 @@ class CartPage extends StatelessWidget {
             ),
           ),
           // Display cart items
-          ...cartProvider.items.map((item) => Padding(
-            padding: EdgeInsets.symmetric(vertical: 6),
-            child: Container(
-              width: MediaQuery.of(context).size.width - 16, // Adjust width
-              height: 110,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 3,
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
+          ...cartProvider.items
+              .map((item) => Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6),
                     child: Container(
-                      alignment: Alignment.center,
-                      child: Image.network(
-                        item.imageUrl,
-                        height: 70,
-                        fit: BoxFit.cover, // Use BoxFit to ensure the image scales properly
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8), // Add spacing
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            item.name,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            item.description,
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            "\৳${item.price}",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5),
-                    child: Container(
-                      padding: EdgeInsets.all(5),
+                      width: MediaQuery.of(context).size.width -
+                          16, // Adjust width
+                      height: 110,
                       decoration: BoxDecoration(
-                        color: Colors.red,
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                          ),
+                        ],
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Row(
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (item.quantity > 1) {
-                                cartProvider.updateQuantity(item, item.quantity - 1);
-                              }
-                            },
-                            child: Icon(
-                              CupertinoIcons.minus,
-                              color: Colors.white,
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: Image.network(
+                                item.imageUrl,
+                                height: 70,
+                                fit: BoxFit
+                                    .cover, // Use BoxFit to ensure the image scales properly
+                              ),
                             ),
                           ),
-                          Text(
-                            "${item.quantity}",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                          SizedBox(width: 8), // Add spacing
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    item.name,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    item.description,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  Text(
+                                    "\৳${item.price}",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              cartProvider.updateQuantity(item, item.quantity + 1);
-                            },
-                            child: Icon(
-                              CupertinoIcons.plus,
-                              color: Colors.white,
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                              ),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (item.quantity > 1) {
+                                        cartProvider.updateQuantity(
+                                            item, item.quantity - 1);
+                                      } else {
+                                        // Remove item from cart if quantity is 1
+                                        cartProvider.removeItem(
+                                            item); // Ensure this method exists in CartProvider
+                                      }
+                                    },
+                                    child: Icon(
+                                      CupertinoIcons.minus,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${item.quantity}",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      cartProvider.updateQuantity(
+                                          item, item.quantity + 1);
+                                    },
+                                    child: Icon(
+                                      CupertinoIcons.plus,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          )).toList(),
+                  ))
+              .toList(),
 
           SizedBox(height: 20),
           Padding(

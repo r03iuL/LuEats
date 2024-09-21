@@ -109,25 +109,7 @@ class _WelcomeState extends State<Welcome> {
                       ),
                     ),
                     SizedBox(height: 30),
-                    Container(
-                      child: SizedBox(
-                        height: 55,
-                        width: 200,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const Signup()), // Changed to Signup with PascalCase
-                            );
-                          },
-                          child: Text("Admin", style: TextStyle(fontSize: 19)),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
+
                   ],
                 ),
               ),

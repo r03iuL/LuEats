@@ -28,7 +28,6 @@ class CartBottomNavBar extends StatelessWidget {
                     SizedBox(width: 15),
                     Text(
                       "\৳${cartProvider.totalAmount.toStringAsFixed(2)}",
-                      // Dynamically show total amount
                       style: TextStyle(
                         fontSize: 19,
                         fontWeight: FontWeight.bold,
@@ -39,10 +38,18 @@ class CartBottomNavBar extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () async {
+                    if (cartProvider.items.isEmpty) {
+                      // Show SnackBar if the cart is empty
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Your cart is empty. Please add items to place an order.')),
+                      );
+                      return;
+                    }
+
                     final cartItems = cartProvider.items;
                     final userId = FirebaseAuth.instance.currentUser?.uid;
 
-                    // Step 1: Fetch user details from Firestore
+                    // Fetch user details from Firestore
                     final userDoc = await FirebaseFirestore.instance
                         .collection('users')
                         .doc(userId)
@@ -52,12 +59,11 @@ class CartBottomNavBar extends StatelessWidget {
 
                     if (userData == null) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              'User details not found. Cannot place order.')));
+                          content: Text('User details not found. Cannot place order.')));
                       return;
                     }
 
-                    // Step 2: Create the order data, including user details
+                    // Create the order data
                     final orderData = {
                       'items': cartItems
                           .map((item) => {
@@ -70,39 +76,25 @@ class CartBottomNavBar extends StatelessWidget {
                       'totalAmount': cartProvider.totalAmount,
                       'orderedAt': Timestamp.now(),
                       'userId': userId,
-                      'userName': userData['name'], // User's name
-                      'designation': userData['designation'], // User's designation
-                      'department': userData['department'], // User's department
-                      'phone': userData['phone'], // User's phone number
-                      'room': userData['room'], // User's room number
-                      'floor': userData['floor'], // User's floor
-                      'building': userData['building'], // User's building
+                      'userName': userData['name'],
+                      'designation': userData['designation'],
+                      'department': userData['department'],
+                      'phone': userData['phone'],
+                      'room': userData['room'],
+                      'floor': userData['floor'],
+                      'building': userData['building'],
                     };
 
                     try {
-                      // Step 3: Save the order to Firestore (under a collection 'Orders')
-                      await FirebaseFirestore.instance
-                          .collection('Orders')
-                          .add(orderData);
-
-                      // Step 4: Clear the cart after the order is placed
+                      await FirebaseFirestore.instance.collection('Orders').add(orderData);
                       cartProvider.clearCart();
-
-                      // Step 5: Show a success message
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Order placed successfully!')));
-
-                      // Step 6: Send notification to admin (if implemented)
-                      // await sendNotificationToAdmin();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order placed successfully!')));
                     } catch (error) {
-                      // Handle errors (e.g., show an error message)
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              'Failed to place order. Please try again.')));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to place order. Please try again.')));
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.red),
+                    backgroundColor: MaterialStateProperty.all(cartProvider.items.isEmpty ? Colors.grey : Colors.red),
                     padding: MaterialStateProperty.all(
                       EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                     ),

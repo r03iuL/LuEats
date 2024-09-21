@@ -28,7 +28,7 @@ class ProfilePage extends StatelessWidget {
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future:
-            FirebaseFirestore.instance.collection('users').doc(user.uid).get(),
+        FirebaseFirestore.instance.collection('users').doc(user.uid).get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -43,6 +43,11 @@ class ProfilePage extends StatelessWidget {
           }
 
           var userData = snapshot.data!.data() as Map<String, dynamic>;
+
+          String imageUrl = userData['imageUrl'] ?? ''; // Default to empty string
+          if (imageUrl.isEmpty) {
+            imageUrl = 'assets/images/default_user.png'; // Path to your default image
+          }
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -61,166 +66,32 @@ class ProfilePage extends StatelessWidget {
                     ),
                     child: ClipOval(
                       child: Image.network(
-                        userData['imageUrl'],
+                        imageUrl,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
+                            'assets/images/default_user.png', // Fallback in case of error
+                            fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.grey.shade100,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Name:',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                      Expanded(
-                        child: Text(userData['name'],
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildProfileDetailRow('Name:', userData['name'] ?? 'Not provided'),
                 SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.grey.shade100,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Email:',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                      Expanded(
-                        child: Text(userData['email'],
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildProfileDetailRow('Email:', userData['email'] ?? 'Not provided'),
                 SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.grey.shade100,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Phone:',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                      Expanded(
-                        child: Text(userData['phone'],
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildProfileDetailRow('Phone:', userData['phone'] ?? 'Not provided'),
                 SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.grey.shade100,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Department:',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                      Expanded(
-                        child: Text(userData['department'],
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildProfileDetailRow('Department:', userData['department'] ?? 'Not provided'),
                 SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.grey.shade100,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Designation:',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                      Expanded(
-                        child: Text(userData['designation'],
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildProfileDetailRow('Designation:', userData['designation'] ?? 'Not provided'),
                 SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.grey.shade100,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Floor:',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                      Expanded(
-                        child: Text(userData['floor'],
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildProfileDetailRow('Floor:', userData['floor'] ?? 'Not provided'),
                 SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.grey.shade100,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Room:',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500)),
-                      Expanded(
-                        child: Text(userData['room'],
-                            textAlign: TextAlign.right,
-                            style: TextStyle(fontSize: 16)),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildProfileDetailRow('Room:', userData['room'] ?? 'Not provided'),
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
@@ -231,9 +102,9 @@ class ProfilePage extends StatelessWidget {
                       backgroundColor: Colors.orange,
                       foregroundColor: Colors.white,
                       padding:
-                          EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                       textStyle:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     child: Text('Edit Info'),
                   ),
@@ -245,5 +116,28 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-}
 
+  Widget _buildProfileDetailRow(String label, String value) {
+    return Container(
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.grey.shade100,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style: TextStyle(
+                  fontSize: 16, fontWeight: FontWeight.w500)),
+          Expanded(
+            child: Text(value,
+                textAlign: TextAlign.right,
+                style: TextStyle(fontSize: 16)),
+          ),
+        ],
+      ),
+    );
+  }
+}

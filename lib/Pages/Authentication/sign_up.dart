@@ -28,6 +28,8 @@ class _SignupState extends State<Signup> {
   final TextEditingController _floorController = TextEditingController();
   final TextEditingController _roomController = TextEditingController();
 
+  bool _isLoading = false; // Loading state variable
+
   // Focus nodes to listen for focus change events
   final FocusNode _nameFocusNode = FocusNode();
   final FocusNode _emailFocusNode = FocusNode();
@@ -155,6 +157,11 @@ class _SignupState extends State<Signup> {
   // Function to handle user sign-up with Firebase
   Future<void> _signUp() async {
     if (_formKey.currentState?.validate() ?? false) {
+
+      setState(() {
+        _isLoading = true; // Show loading indicator
+      });
+
       try {
         UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
@@ -205,9 +212,14 @@ class _SignupState extends State<Signup> {
           content: Text("Something went wrong"),
           backgroundColor: Colors.red,
         ));
+      } finally {
+        setState(() {
+          _isLoading = false; // Hide loading indicator
+        });
       }
     }
   }
+
 
   // Function to upload image to Firebase Storage
   Future<String?> _uploadImage(String uid) async {
@@ -606,14 +618,30 @@ class _SignupState extends State<Signup> {
                       height: 45,
                       width: 200,
                       child: ElevatedButton(
-                        onPressed: _signUp,
-                        child: Text("Sign Up", style: TextStyle(fontSize: 19)),
+                        // Disable the button when loading is true
+                        onPressed: _isLoading ? null : _signUp,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
                         ),
+                        child: _isLoading
+                            ? SizedBox(
+                          height: 24, // Set the size of the loading spinner
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white), // Set spinner color
+                            strokeWidth: 2.5, // Adjust thickness of the spinner
+                          ),
+                        )
+                            : Text(
+                          "Submit",
+                          style: TextStyle(fontSize: 19),
+                        ),
                       ),
                     ),
+
+
+
                     SizedBox(height: 20),
                     Text(
                       "Already signed up?",

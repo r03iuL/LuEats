@@ -1,32 +1,21 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'Pages/Cart/cart_provider.dart'; // Import your CartProvider
-import 'Pages/Welcome/welcome.dart';
-import 'Pages/Authentication/forgot_pass.dart';
-import 'Pages/Welcome/splash_screen.dart';
-import 'Pages/Authentication/sign_up.dart';
-import 'Pages/Authentication/log_in.dart';
-import 'Pages/Cart/cart_page.dart';
-import 'Pages/HomePage/home_page.dart';
-import 'Pages/MoneyPage.dart';
-import 'Pages/Itemsingara.dart';
-import 'Pages/Itemsomuca.dart';
-import 'Pages/Orderbreakfast.dart';
-import 'Pages/Orderdrinks.dart';
-import 'Pages/Ordertea.dart';
-import 'Pages/Lunch/order_lunch.dart';
-import 'Pages/Orderpizza.dart';
-import 'Pages/Orderbiriyani.dart';
-import 'Pages/Orderburger.dart';
-import 'Pages/Ordercupnoodles.dart';
-import 'Pages/Ordermojo.dart';
-import 'Pages/Orderkhicuri.dart';
-import 'Pages/Admin/add_food.dart';
+
 import 'Pages/Admin/add_category.dart';
+import 'Pages/Admin/add_food.dart';
 import 'Pages/Admin/add_lunch.dart';
+import 'Pages/Authentication/forgot_pass.dart';
+import 'Pages/Authentication/log_in.dart';
+import 'Pages/Authentication/sign_up.dart';
+import 'Pages/Cart/cart_page.dart';
+import 'Pages/Cart/cart_provider.dart'; // Import your CartProvider
+import 'Pages/HomePage/home_page.dart';
+import 'Pages/Lunch/order_lunch.dart';
 import 'Pages/Profile/profile.dart';
 import 'Pages/Profile/update_profile_page.dart';
+import 'Pages/Welcome/splash_screen.dart';
+import 'Pages/Welcome/welcome.dart';
 import 'Pages/order_history.dart';
 
 void main() async {
@@ -60,20 +49,7 @@ class MyApp extends StatelessWidget {
           "login1": (context) => Login(),
           "homepage": (context) => HomePage(),
           "welcome": (context) => Welcome(),
-          "moneyPage": (context) => MoneyPage(),
           "cartPage": (context) => CartPage(),
-          "itemsingara": (context) => Itemsingara(),
-          "itemsomuca": (context) => Itemsomuca(),
-          "orderbreakfast": (context) => Orderbreakfast(),
-          "orderdrinks": (context) => Orderdrinks(),
-          "ordertea": (context) => Ordertea(),
-          "orderlunch": (context) => Orderlunch(),
-          "orderpizza": (context) => Orderpizza(),
-          "orderbiriyani": (context) => Orderbiriyani(),
-          "orderburger": (context) => Orderburger(),
-          "ordercupnoodles": (context) => Ordercupnoodles(),
-          "ordermojo": (context) => Ordermojo(),
-          "orderkhicuri": (context) => Orderkhicuri(),
           "forgetpass": (context) => Forgetpass(),
           "addfood": (context) => AddFood(),
           "addlunch": (context) => AddLunch(),
@@ -81,6 +57,7 @@ class MyApp extends StatelessWidget {
           "profile": (context) => ProfilePage(),
           "editprofile": (context) => UpdateProfilePage(),
           "orderhistory": (context) => OrderHistoryPage(),
+          "orderlunch": (context) => OrderLunchPage(),
         },
       ),
     );
