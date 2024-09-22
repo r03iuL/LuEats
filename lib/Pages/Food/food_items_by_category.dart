@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../Widgets/food_items_grid_widget.dart';
+import '../../Widgets/food_items_grid_widget.dart';
 
 class FoodItemsByCategoryPage extends StatelessWidget {
   final String categoryName;

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart'; // Import Provider for cart functionality
-import '../Pages/food_details.dart'; // Import the FoodDetailsPage
+import '../Pages/Food/food_details.dart'; // Import the FoodDetailsPage
 import '../Pages/Cart/cart_provider.dart'; // Import CartProvider for managing cart items
 
 class FoodItemsGrid extends StatelessWidget {

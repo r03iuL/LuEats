@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppBarWidget extends StatelessWidget {
+  final void Function(String)? onSearch;
+
+  AppBarWidget({this.onSearch});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -62,10 +66,14 @@ class AppBarWidget extends StatelessWidget {
                             hintText: "Search Here .. ",
                             border: InputBorder.none,
                           ),
+                          onFieldSubmitted: (value) {
+                            if (onSearch != null) {
+                              onSearch!(value); // Trigger search when Enter is pressed
+                            }
+                          },
                         ),
                       ),
                     ),
-                    //Icon(Icons.filter_list, color: Colors.grey),
                   ],
                 ),
               ),

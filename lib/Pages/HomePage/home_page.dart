@@ -6,6 +6,7 @@ import '../../Widgets/categories_widget.dart';
 import '../../Widgets/drawer_widget.dart';
 import '../../Widgets/food_items_grid_widget.dart';
 import '../../Widgets/popular_iItems_widget.dart';
+import '../../Pages/Search/search_page.dart'; // Import the SearchPage
 
 class HomePage extends StatelessWidget {
   @override
@@ -13,8 +14,18 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
-          // custom app bar
-          AppBarWidget(),
+          // Custom app bar with search functionality
+          AppBarWidget(
+            onSearch: (searchTerm) {
+              // Navigate to the search page with the search term
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchPage(searchTerm: searchTerm),
+                ),
+              );
+            },
+          ),
 
           SizedBox(height: 20),
 
@@ -22,9 +33,7 @@ class HomePage extends StatelessWidget {
           Container(
             height: 200,
             margin: EdgeInsets.symmetric(horizontal: 16.0),
-            // Add padding from the sides
             padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 5),
-            // Add padding top and bottom
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16.0), // Rounded corners
               gradient: LinearGradient(
@@ -39,7 +48,6 @@ class HomePage extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(left: 16.0),
-                    // Padding inside the container
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -77,7 +85,6 @@ class HomePage extends StatelessWidget {
                 ),
                 Container(
                   margin: EdgeInsets.only(right: 0),
-                  // Padding inside the container
                   child: Image.asset(
                     'assets/images/launch.png', // Replace with your image path
                     height: 120, // Adjust height as needed
@@ -91,7 +98,7 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(top: 20, left: 20),
             child: Text(
-              "Catagories",
+              "Categories",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -100,10 +107,10 @@ class HomePage extends StatelessWidget {
             ),
           ),
 
-          //Category Widget
+          // Category Widget
           CategoriesWidget(),
 
-          // popular Items
+          // Popular Items
           Padding(
             padding: EdgeInsets.only(top: 20, left: 20),
             child: Text(
@@ -114,10 +121,10 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          //popular items widget
+          // Popular items widget
           PopularItemsWidget(),
 
-          //newest Items
+          // Newest Items
           Padding(
             padding: EdgeInsets.only(top: 20, left: 20),
             child: Text(
@@ -128,8 +135,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-        // SizedBox(height: 10,),
-          //Food items widget
+          // Food items widget
           FoodItemsGrid(
             foodQuery: FirebaseFirestore.instance.collection('Food_items'),
             onItemTap: (foodData) {
@@ -141,15 +147,17 @@ class HomePage extends StatelessWidget {
       ),
       drawer: DrawerWidget(),
       floatingActionButton: Container(
-        decoration:
-            BoxDecoration(borderRadius: BorderRadius.circular(20), boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 10,
-            offset: Offset(0, 3),
-          ),
-        ]),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
         child: FloatingActionButton(
           onPressed: () {
             Navigator.pushNamed(context, "cartPage");

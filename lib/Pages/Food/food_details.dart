@@ -2,7 +2,7 @@ import 'package:clippy_flutter/arc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Pages/Cart/cart_provider.dart';
+import '../Cart/cart_provider.dart';
 
 class FoodDetailsPage extends StatefulWidget {
   final String imageUrl;

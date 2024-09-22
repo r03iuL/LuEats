@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import '../Pages/food_details.dart';
+import '../Pages/Food/food_details.dart';
 import '../Pages/Cart/cart_provider.dart';
 
 class PopularItemsWidget extends StatelessWidget {

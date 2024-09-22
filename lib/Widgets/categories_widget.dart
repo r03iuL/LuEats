@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../Pages/food_items_by_category.dart';
+import '../Pages/Food/food_items_by_category.dart';
 
 class CategoriesWidget extends StatelessWidget {
   final CollectionReference _categoryCollection =
