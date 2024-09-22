@@ -65,7 +65,7 @@ class AppBarWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Icon(Icons.filter_list, color: Colors.grey),
+                    //Icon(Icons.filter_list, color: Colors.grey),
                   ],
                 ),
               ),
