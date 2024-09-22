@@ -25,7 +25,13 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Search Results"),
+        title: Text("Search Results",style: TextStyle(
+            fontSize: 24, // Adjust the font size
+            fontWeight: FontWeight.bold, // Adjust the font weight
+            color: Colors.white),),
+        backgroundColor: Colors.deepOrange,
+        centerTitle: true,
+
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: foodQueryStream,

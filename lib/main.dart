@@ -17,7 +17,7 @@ import 'Pages/Profile/update_profile_page.dart';
 import 'Pages/Welcome/splash_screen.dart';
 import 'Pages/Welcome/welcome.dart';
 import 'Pages/order_history.dart';
-import 'Pages/Search/search_page.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
