@@ -35,7 +35,6 @@ class DrawerWidget extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          // Use a Container instead of DrawerHeader for more control
           FutureBuilder<Map<String, dynamic>?>(
             future: _fetchUserData(),
             builder: (context, snapshot) {
@@ -43,21 +42,21 @@ class DrawerWidget extends StatelessWidget {
                 return Container(
                   width: double.infinity,
                   height: 200,
-                  color: Colors.blueGrey, // Placeholder color
+                  color: Colors.blueGrey,
                   child: Center(child: CircularProgressIndicator()),
                 );
               } else if (snapshot.hasError) {
                 return Container(
                   width: double.infinity,
                   height: 200,
-                  color: Colors.red, // Placeholder color
+                  color: Colors.red,
                   child: Center(child: Text('Error: ${snapshot.error}')),
                 );
               } else if (!snapshot.hasData) {
                 return Container(
                   width: double.infinity,
                   height: 205,
-                  color: Colors.grey, // Placeholder color
+                  color: Colors.grey,
                   child: Center(child: Text('No user data found')),
                 );
               }
@@ -65,20 +64,19 @@ class DrawerWidget extends StatelessWidget {
               final userData = snapshot.data!;
               final String? imageUrl = userData['imageUrl'];
               final String? name = userData['name'];
-              final String? phone = userData['phone'];
 
               return Container(
                 width: double.infinity,
-                height: 200, // Adjust height as needed
+                height: 200,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Colors.red, Colors.orange], // Gradient colors
+                    colors: [Colors.red, Colors.orange],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center, // Center the contents vertically
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(height: 20),
@@ -86,16 +84,16 @@ class DrawerWidget extends StatelessWidget {
                       backgroundImage: imageUrl != null
                           ? NetworkImage(imageUrl)
                           : AssetImage("assets/images/default_user.png") as ImageProvider,
-                      radius: 60, // Adjust radius to increase the image size
+                      radius: 60,
                     ),
-                    SizedBox(height: 12), // Space between avatar and text
+                    SizedBox(height: 12),
                     Text(
                       name ?? 'User Name',
                       style: TextStyle(
-                        fontSize:20, // Increase font size for larger text
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        overflow: TextOverflow.ellipsis, // Add ellipsis for long text
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -103,13 +101,12 @@ class DrawerWidget extends StatelessWidget {
               );
             },
           ),
-          // Use Expanded to ensure that the remaining drawer space is used
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
                 ListTile(
-                  leading: Icon(CupertinoIcons.home, color: Colors.green),
+                  leading: Icon(CupertinoIcons.home, color: Colors.orange),
                   title: Text(
                     "Home",
                     style: TextStyle(
@@ -122,7 +119,7 @@ class DrawerWidget extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(CupertinoIcons.person, color: Colors.green),
+                  leading: Icon(CupertinoIcons.person, color: Colors.orange),
                   title: Text(
                     "Profile",
                     style: TextStyle(
@@ -135,7 +132,7 @@ class DrawerWidget extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(CupertinoIcons.cart_fill_badge_plus, color: Colors.green),
+                  leading: Icon(CupertinoIcons.cart_fill_badge_plus, color: Colors.orange),
                   title: Text(
                     "Order History",
                     style: TextStyle(
@@ -147,78 +144,8 @@ class DrawerWidget extends StatelessWidget {
                     Navigator.pushNamed(context, "orderhistory");
                   },
                 ),
-
-                //Credit
-                // ListTile(
-                //   leading: Icon(Icons.money, color: Colors.green),
-                //   title: Text(
-                //     "Money Section",
-                //     style: TextStyle(
-                //       fontSize: 18,
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                //   onTap: () {
-                //     Navigator.pushNamed(context, "moneyPage");
-                //   },
-                // ),
-
-                //Settings
-                // ListTile(
-                //   leading: Icon(Icons.settings, color: Colors.green),
-                //   title: Text(
-                //     "Settings",
-                //     style: TextStyle(
-                //       fontSize: 18,
-                //       fontWeight: FontWeight.bold,
-                //     ),
-                //   ),
-                //   onTap: () {
-                //     Navigator.pushNamed(context, "signup1");
-                //   },
-                // ),
-
                 ListTile(
-                  leading: Icon(Icons.settings, color: Colors.green),
-                  title: Text(
-                    "Add Food",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, "addfood");
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.settings, color: Colors.green),
-                  title: Text(
-                    "Add Category",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, "addcategory");
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.settings, color: Colors.deepOrange),
-                  title: Text(
-                    "Add Launch",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, "addlunch");
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.exit_to_app_rounded, color: Colors.green),
+                  leading: Icon(Icons.exit_to_app_rounded, color: Colors.orange),
                   title: Text(
                     "Log Out",
                     style: TextStyle(

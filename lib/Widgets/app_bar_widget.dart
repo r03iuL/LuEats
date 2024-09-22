@@ -67,8 +67,12 @@ class AppBarWidget extends StatelessWidget {
                             border: InputBorder.none,
                           ),
                           onFieldSubmitted: (value) {
-                            if (onSearch != null) {
-                              onSearch!(value); // Trigger search when Enter is pressed
+                            if (value.isNotEmpty) {
+                              if (onSearch != null) {
+                                onSearch!(value); // Trigger search when Enter is pressed
+                              }
+                            } else {
+                              FocusScope.of(context).unfocus(); // Close keyboard if search term is empty
                             }
                           },
                         ),

@@ -8,7 +8,6 @@ import '../Cart/cart_provider.dart';
 class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Access CartProvider from the context
     final cartProvider = Provider.of<CartProvider>(context);
 
     return Scaffold(
@@ -16,8 +15,8 @@ class CartPage extends StatelessWidget {
         title: Text(
           'Your Cart',
           style: TextStyle(
-              fontSize: 24, // Adjust the font size
-              fontWeight: FontWeight.bold, // Adjust the font weight
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
               color: Colors.white),
         ),
         backgroundColor: Colors.deepOrange,
@@ -26,7 +25,6 @@ class CartPage extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 8),
         children: [
-          //AppBarWidget(),
           Padding(
             padding: EdgeInsets.only(top: 20, bottom: 10),
             child: Text(
@@ -37,126 +35,120 @@ class CartPage extends StatelessWidget {
               ),
             ),
           ),
-          // Display cart items
-          ...cartProvider.items
-              .map((item) => Padding(
-                    padding: EdgeInsets.symmetric(vertical: 6),
+          ...cartProvider.items.map((item) => Padding(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            child: Container(
+              width: MediaQuery.of(context).size.width - 16,
+              height: 110,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 3,
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
                     child: Container(
-                      width: MediaQuery.of(context).size.width -
-                          16, // Adjust width
-                      height: 110,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 3,
-                            blurRadius: 10,
-                          ),
-                        ],
+                      alignment: Alignment.center,
+                      child: Image.network(
+                        item.imageUrl,
+                        height: 70,
+                        fit: BoxFit.cover,
                       ),
-                      child: Row(
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: Image.network(
-                                item.imageUrl,
-                                height: 70,
-                                fit: BoxFit
-                                    .cover, // Use BoxFit to ensure the image scales properly
-                              ),
+                          Text(
+                            item.name,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(width: 8), // Add spacing
-                          Expanded(
-                            flex: 2,
-                            child: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    item.name,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    item.description,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  Text(
-                                    "\৳${item.price}",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ],
+                          Flexible(
+                            child: Text(
+                              item.description,
+                              style: TextStyle(
+                                fontSize: 12,
                               ),
+                              maxLines: 2, // Limit the number of lines
+                              overflow: TextOverflow.ellipsis, // Add ellipsis if overflow
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                              ),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      if (item.quantity > 1) {
-                                        cartProvider.updateQuantity(
-                                            item, item.quantity - 1);
-                                      } else {
-                                        // Remove item from cart if quantity is 1
-                                        cartProvider.removeItem(
-                                            item); // Ensure this method exists in CartProvider
-                                      }
-                                    },
-                                    child: Icon(
-                                      CupertinoIcons.minus,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    "${item.quantity}",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      cartProvider.updateQuantity(
-                                          item, item.quantity + 1);
-                                    },
-                                    child: Icon(
-                                      CupertinoIcons.plus,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          Text(
+                            "\৳${item.price}",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ))
-              .toList(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (item.quantity > 1) {
+                                cartProvider.updateQuantity(item, item.quantity - 1);
+                              } else {
+                                cartProvider.removeItem(item);
+                              }
+                            },
+                            child: Icon(
+                              CupertinoIcons.minus,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            "${item.quantity}",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              cartProvider.updateQuantity(item, item.quantity + 1);
+                            },
+                            child: Icon(
+                              CupertinoIcons.plus,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )).toList(),
 
           SizedBox(height: 20),
           Padding(

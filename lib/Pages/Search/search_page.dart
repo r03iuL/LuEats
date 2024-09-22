@@ -25,13 +25,16 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Search Results",style: TextStyle(
-            fontSize: 24, // Adjust the font size
-            fontWeight: FontWeight.bold, // Adjust the font weight
-            color: Colors.white),),
+        title: Text(
+          "Search Results",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: Colors.deepOrange,
         centerTitle: true,
-
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: foodQueryStream,
@@ -53,11 +56,15 @@ class _SearchPageState extends State<SearchPage> {
             return name.contains(widget.searchTerm.toLowerCase());
           }).toList();
 
-          // Create a new query for the filtered items
-          final filteredQuery = FirebaseFirestore.instance.collection('Food_items').where(FieldPath.documentId, whereIn: filteredItems.map((doc) => doc.id).toList());
+          if (filteredItems.isEmpty) {
+            return Center(child: Text('No matching food items found.'));
+          }
 
           return FoodItemsGrid(
-            foodQuery: filteredQuery,
+            foodQuery: FirebaseFirestore.instance.collection('Food_items').where(
+              FieldPath.documentId,
+              whereIn: filteredItems.map((doc) => doc.id).toList(),
+            ),
             onItemTap: (foodData) {
               // Handle item tap
             },
